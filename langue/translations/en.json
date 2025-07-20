@@ -60,5 +60,9 @@
     "system_test_success": "✅ Connections OK!",
   "secure_connection": "🔒 Secure connection active",
   "config_details_available": "⚙️ Detailed configuration available in Settings tab",
-  "status_active": "✅ OK"
+  "status_active": "✅ OK",
+  "status_ok": "OK",
+  "status_warning": "SLOW",
+  "status_error": "ERROR",
+  "refresh_status": "🔄 Refresh"
 }
