@@ -147,18 +147,18 @@ def render_query_history():
     st.markdown(f"### {get_text('query_history')}")
     
     if 'query_history' not in st.session_state or not st.session_state.query_history:
-        st.info("Aucune requête dans l'historique")
+        st.info(get_text("no_history"))
         return
     
     # Affichage de l'historique
     for i, entry in enumerate(st.session_state.query_history):
-        with st.expander(f"Query {i+1}: {entry['question'][:50]}..."):
-            st.markdown("**Question:**")
+        with st.expander(f"{get_text('query_number')} {i+1}: {entry['question'][:50]}..."):
+            st.markdown(get_text("question_label_history"))
             st.write(entry['question'])
-            st.markdown("**SQL:**")
+            st.markdown(get_text("sql_label_history"))
             st.code(entry['sql'], language="sql")
             
-            if st.button(f"Réutiliser cette requête", key=f"reuse_{i}"):
+            if st.button(get_text("reuse_query"), key=f"reuse_{i}"):
                 st.session_state.question_input = entry['question']
                 st.session_state.generated_sql = entry['sql']
                 st.rerun()
@@ -167,48 +167,70 @@ def render_advanced_settings():
     """Paramètres avancés"""
     st.markdown(f"### {get_text('tab_settings')}")
     
-    # Configuration LLM
-    st.subheader("🤖 Configuration LLM")
+    # Configuration LLM avec valeurs optimales officielles
+    st.subheader(get_text("llm_config_title"))
+    
+    # Information importante
+    st.info(get_text("llm_config_info"))
     
     col1, col2 = st.columns(2)
     
     with col1:
         temperature = st.slider(
-            "Température (créativité)",
+            get_text("temperature_label"),
             min_value=0.0,
-            max_value=1.0,
-            value=0.1,
-            step=0.05
+            max_value=0.3,  # Limité pour SQL
+            value=0.0,       # Valeur officielle recommandée
+            step=0.05,
+            help="**Recommandation officielle : 0.0 pour SQL**\n\n"
+                 "• 0.0 = Déterministe, résultats cohérents (RECOMMANDÉ)\n"
+                 "• 0.1-0.2 = Légères variations possibles\n"
+                 "• 0.3+ = Trop créatif pour du SQL précis\n\n"
+                 "Source: Documentation Google Gemini"
         )
     
     with col2:
         max_tokens = st.number_input(
-            "Tokens maximum",
-            min_value=100,
-            max_value=4000,
-            value=1000,
-            step=100
+            get_text("max_tokens_label"),
+            min_value=500,
+            max_value=2000,
+            value=1000,      # Valeur officielle recommandée
+            step=100,
+            help="**Recommandation officielle : 1000 tokens**\n\n"
+                 "• 500-800 = Requêtes SQL simples\n"
+                 "• 1000 = Parfait pour la plupart des cas (RECOMMANDÉ)\n"
+                 "• 1500+ = Requêtes SQL très complexes\n\n"
+                 "1 token ≈ 4 caractères, 100 tokens ≈ 60-80 mots"
         )
     
-    # Configuration base de données
-    st.subheader("🗄️ Configuration Base de Données")
+    # Sauvegarder les paramètres dans session state
+    st.session_state.llm_config = {
+        'temperature': temperature,
+        'max_tokens': max_tokens
+    }
     
-    st.info("Configuration chargée depuis .env")
+    # Alerte si paramètres non-optimaux
+    if temperature > 0.2:
+        st.warning(get_text("temp_warning"))
+    
+    if temperature == 0.0:
+        st.success(get_text("temp_optimal"))
     
     # Actions
-    st.subheader("🔧 Actions")
+    st.subheader(get_text("actions_title"))
     
     col1, col2 = st.columns(2)
     
     with col1:
-        if st.button("🗑️ Vider l'historique", use_container_width=True):
+        if st.button(get_text("clear_history"), use_container_width=True):
             st.session_state.query_history = []
-            st.success("Historique vidé !")
+            st.success(get_text("history_cleared"))
     
     with col2:
-        if st.button("🔄 Reset paramètres", use_container_width=True):
-            # Reset des paramètres à leurs valeurs par défaut
-            for key in list(st.session_state.keys()):
-                if key.startswith('llm_'):
-                    del st.session_state[key]
-            st.success("Paramètres réinitialisés !")
+        if st.button(get_text("reset_params"), use_container_width=True):
+            # Reset aux valeurs optimales recommandées
+            st.session_state.llm_config = {
+                'temperature': 0.0,
+                'max_tokens': 1000
+            }
+            st.success(get_text("params_reset"))

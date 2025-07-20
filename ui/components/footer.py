@@ -41,7 +41,7 @@ def render_footer():
     # Contenu du footer
     st.markdown("---")
     
-    col1, col2, col3 = st.columns([1, 2, 1])
+    col1, col2 = st.columns([1, 3])
     
     with col1:
         st.markdown("**🔄 TextToSQL**")
@@ -49,32 +49,11 @@ def render_footer():
     
     with col2:
         st.markdown(f"""
-        <div style='text-align: center;'>
+        <div style='text-align: right;'>
             <p>{get_text('footer_message')}</p>
             <p><small>{get_text('powered_by')} <strong>Streamlit</strong> + <strong>LangChain</strong> + <strong>Google Gemini</strong></small></p>
         </div>
         """, unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown("**📊 Analytics**")
-        st.caption("Redshift + AWS")
-    
-    # Liens utiles
-    st.markdown("---")
-    
-    link_col1, link_col2, link_col3, link_col4 = st.columns(4)
-    
-    with link_col1:
-        st.markdown("📚 [Documentation]()")
-    
-    with link_col2:
-        st.markdown("🐛 [Support]()")
-    
-    with link_col3:
-        st.markdown("💡 [Feedback]()")
-    
-    with link_col4:
-        st.markdown("⭐ [GitHub]()")
     
     # Copyright
     st.markdown("""

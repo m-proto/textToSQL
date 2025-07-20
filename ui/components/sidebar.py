@@ -59,31 +59,22 @@ def render_connection_status():
     """Affiche le statut des connexions"""
     st.subheader(get_text("database_config"))
     
-    # Status Database
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric(
-            label=get_text("database"),
-            value="🟢",
-            delta=get_text("connected")
-        )
+    # Status Database - Format vertical pour noms complets
+    st.metric(
+        label=get_text("database"),
+        value="🟢",
+        delta=get_text("connected")
+    )
+    st.caption("Redshift")
     
-    with col2:
-        st.metric(
-            label=get_text("schema"),
-            value="usedcar_dwh"
-        )
+    st.metric(
+        label=get_text("schema"),
+        value="📋"
+    )
+    st.caption("usedcar_dwh")
     
-    # Informations de connexion
-    with st.expander("ℹ️ Détails connexion"):
-        try:
-            from infrastructure.settings import settings
-            st.text(f"Host: {settings.redshift_host[:30]}...")
-            st.text(f"Database: {settings.redshift_db}")
-            st.text(f"Schema: {settings.redshift_schema}")
-            st.text(f"Port: {settings.redshift_port}")
-        except Exception as e:
-            st.error(f"Erreur de configuration: {str(e)}")
+    # Status simplifié
+    st.caption(get_text("secure_connection"))
 
 def render_llm_settings():
     """Paramètres du LLM"""
@@ -93,37 +84,15 @@ def render_llm_settings():
     st.metric(
         label=get_text("model_info"),
         value="🤖 Gemini",
-        delta="✅ Actif"
+        delta=get_text("status_active")
     )
     
-    # Paramètres avancés
-    with st.expander("⚙️ Paramètres avancés"):
-        temperature = st.slider(
-            get_text("temperature"),
-            min_value=0.0,
-            max_value=1.0,
-            value=0.1,
-            step=0.1,
-            key="llm_temperature"
-        )
-        
-        max_tokens = st.number_input(
-            get_text("max_tokens"),
-            min_value=100,
-            max_value=4000,
-            value=1000,
-            step=100,
-            key="llm_max_tokens"
-        )
-        
-        st.session_state.llm_config = {
-            'temperature': temperature,
-            'max_tokens': max_tokens
-        }
+    # Configuration simplifiée - détails dans l'onglet Paramètres
+    st.caption(get_text("config_details_available"))
 
 def render_system_info():
     """Informations système"""
-    st.subheader("📊 System")
+    st.subheader(get_text("system_title"))
     
     # Métriques rapides
     col1, col2 = st.columns(2)
@@ -136,11 +105,11 @@ def render_system_info():
     
     # Bouton de test
     if st.button("🔍 " + get_text("connection_test"), use_container_width=True):
-        with st.spinner("Test en cours..."):
+        with st.spinner(get_text("system_test_running")):
             # Simuler un test de connexion
             import time
             time.sleep(2)
-            st.success("✅ Connexions OK !")
+            st.success(get_text("system_test_success"))
     
     # Version info
     st.caption("v1.0.0 | TextToSQL Streamlit")
