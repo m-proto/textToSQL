@@ -1,0 +1,84 @@
+"""
+Pied de page de l'application
+"""
+import streamlit as st
+from langue.translator import get_text
+
+def render_footer():
+    """Affiche le pied de page"""
+    
+    # CSS pour le footer
+    st.markdown("""
+    <style>
+    .footer {
+        margin-top: 3rem;
+        padding: 2rem 0;
+        border-top: 2px solid #e0e0e0;
+        text-align: center;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border-radius: 10px;
+    }
+    .footer-content {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .footer-section {
+        margin: 0.5rem;
+    }
+    .footer-link {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .footer-link:hover {
+        text-decoration: underline;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    # Contenu du footer
+    st.markdown("---")
+    
+    col1, col2, col3 = st.columns([1, 2, 1])
+    
+    with col1:
+        st.markdown("**🔄 TextToSQL**")
+        st.caption("v1.0.0")
+    
+    with col2:
+        st.markdown(f"""
+        <div style='text-align: center;'>
+            <p>{get_text('footer_message')}</p>
+            <p><small>{get_text('powered_by')} <strong>Streamlit</strong> + <strong>LangChain</strong> + <strong>Google Gemini</strong></small></p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("**📊 Analytics**")
+        st.caption("Redshift + AWS")
+    
+    # Liens utiles
+    st.markdown("---")
+    
+    link_col1, link_col2, link_col3, link_col4 = st.columns(4)
+    
+    with link_col1:
+        st.markdown("📚 [Documentation]()")
+    
+    with link_col2:
+        st.markdown("🐛 [Support]()")
+    
+    with link_col3:
+        st.markdown("💡 [Feedback]()")
+    
+    with link_col4:
+        st.markdown("⭐ [GitHub]()")
+    
+    # Copyright
+    st.markdown("""
+    <div style='text-align: center; margin-top: 1rem; color: #666;'>
+        <small>© 2025 TextToSQL Project. Tous droits réservés.</small>
+    </div>
+    """, unsafe_allow_html=True)
